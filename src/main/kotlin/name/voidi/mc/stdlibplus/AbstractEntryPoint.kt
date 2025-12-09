@@ -38,6 +38,7 @@ abstract class AbstractEntryPoint(
 		
 		//Cache loading storing methods for serialized lists
 		modEventBus.register(ObjectListCache)
+
 		runWhenOn(Dist.CLIENT) {
 			// This will use NeoForge's ConfigurationScreen to display this mod's configs
 			this.modContainer.registerExtensionPoint(

@@ -22,14 +22,23 @@ class EntryPoint(
 	
 	init {
 		MOD = this
+	}
+}
 
+@Mod(MODID, dist = [Dist.CLIENT])
+class ClientEntryPoint(
+	modEventBus: IEventBus, modContainer: ModContainer, dist: Dist
+) : AbstractEntryPoint(MODID, modEventBus, modContainer, dist) {
+	
+	init {
+		// register a generic debug screen entry
 		modEventBus.addListener { event: RegisterDebugEntriesEvent ->
 			ResourceLocation.fromNamespaceAndPath(MODID, "development_debug").let { path ->
 				event.register(path, DevelopmentDebugEntry)
 				event.includeInProfile(path, DebugScreenProfile.DEFAULT, DebugScreenEntryStatus.NEVER)
 			}
 		}
-		
+	
 		DevelopmentDebugEntry.DebugLines += { _, _, _, _ ->
 			"Movement: ${Minecraft.getInstance().player!!.deltaMovement.display}"
 		}
