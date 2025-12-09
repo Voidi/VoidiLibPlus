@@ -194,7 +194,3 @@ idea {
 		isDownloadJavadoc = true
 	}
 }
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-}
