@@ -20,6 +20,7 @@ tasks.named<Wrapper>("wrapper") {
 }
 
 val mod_id: String by project
+val mod_name: String by project
 val mod_version: String by project
 val mod_group_id: String by project
 
@@ -29,7 +30,6 @@ group = mod_group_id
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error.
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
-  val mod_name: String by project
   val mod_license: String by project
   val mod_authors: String by project
 	val mod_credits: String by project
@@ -192,5 +192,23 @@ idea {
 	module {
 		isDownloadSources = true
 		isDownloadJavadoc = true
+	}
+}
+
+publishing {
+	publications {
+		register<MavenPublication>("maven") {
+			from(components["java"])
+		}
+	}
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      setUrl("https://maven.pkg.github.com/Voidi/${mod_name}")
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
+    }
 	}
 }
