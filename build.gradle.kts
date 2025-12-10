@@ -72,6 +72,11 @@ base {
 	archivesName = mod_id
 }
 
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
