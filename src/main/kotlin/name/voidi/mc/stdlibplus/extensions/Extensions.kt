@@ -5,14 +5,14 @@ import net.minecraft.advancements.AdvancementRequirements
 import net.minecraft.advancements.Criterion
 import net.minecraft.core.*
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.*
 import net.minecraft.world.item.*
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.*
 import java.util.*
 
-val Block.ResourceLocation: ResourceLocation
+val Block.ResourceLocation: Identifier
 	get() = BuiltInRegistries.BLOCK.getKey(this)
 
 operator fun TagKey<Item>.contains(item: Item): Boolean {
@@ -23,7 +23,7 @@ operator fun TagKey<Item>.contains(stack: ItemStack): Boolean {
 	return stack.`is`(this)
 }
 
-operator fun Iterable<ResourceLocation>.contains(block: Block): Boolean {
+operator fun Iterable<Identifier>.contains(block: Block): Boolean {
 	return block.ResourceLocation in this
 }
 //operator fun Iterable<ResourceLocation>.contains(block: BlockState): Boolean {

@@ -6,11 +6,12 @@ import net.minecraft.core.component.*
 import net.minecraft.network.codec.*
 import net.neoforged.neoforge.registries.*
 
-fun <T> DeferredRegister.DataComponents.register(
+fun <T : Any> DeferredRegister.DataComponents.register(
 	name: String,
 	codec: Codec<T>,
 	networkCodec: StreamCodec<ByteBuf, T>? = null
 ): DeferredHolder<DataComponentType<*>, DataComponentType<T>> {
+
 	return this.registerComponentType(name) { builder ->
 		if (networkCodec == null) {
 			builder
@@ -23,6 +24,3 @@ fun <T> DeferredRegister.DataComponents.register(
 		}
 	}
 }
-
-
-

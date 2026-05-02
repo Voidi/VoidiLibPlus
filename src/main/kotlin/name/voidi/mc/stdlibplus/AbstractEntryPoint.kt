@@ -66,11 +66,11 @@ abstract class AbstractEntryPoint(
 	}
 	
 	protected fun registerItemTag(id: String): TagKey<Item> {
-		return TagKey.create<Item>(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(this.MOD_ID, id))
+		return TagKey.create<Item>(Registries.ITEM, Identifier.fromNamespaceAndPath(this.MOD_ID, id))
 	}
 	
 	protected fun registerBlockTag(id: String): TagKey<Block> {
-		return TagKey.create<Block>(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.MOD_ID, id))
+		return TagKey.create<Block>(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.MOD_ID, id))
 	}
 	
 	fun debug(marker: Marker, vararg message: Any?) {

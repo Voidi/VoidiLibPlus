@@ -2,7 +2,7 @@ package name.voidi.mc.stdlibplus
 
 import com.mojang.serialization.*
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
@@ -44,11 +44,11 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 	constructor(modid: String) : this(modid, ModConfigSpec.Builder())
 	
 	protected fun registerItemTag(id: String): TagKey<Item> {
-		return TagKey.create<Item>(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(this.MOD_ID, id))
+		return TagKey.create<Item>(Registries.ITEM, Identifier.fromNamespaceAndPath(this.MOD_ID, id))
 	}
 	
 	protected fun registerBlockTag(id: String): TagKey<Block> {
-		return TagKey.create<Block>(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.MOD_ID, id))
+		return TagKey.create<Block>(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.MOD_ID, id))
 	}
 	
 	protected fun <T> Section(comment: String? = null, sectionProvider: () -> T): SectionBuilder<T> {
@@ -103,7 +103,7 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 	}
 	
 	inner class ListPropertyBuilder<T : Any>(protected val clazz: KClass<T>) : AbstractPropertyBuilder() {
-		var DefaultValue = { emptyList<T>() }
+		var DefaultValue: () -> List<T> = { emptyList<T>() }
 		var NewEntry: () -> T? = { DefaultValue().firstOrNull() }
 		var ElementValidator: (T) -> Boolean = { true }
 		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): ListPropertyDelegate<T> {
@@ -119,9 +119,10 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 				val configValue = builder.defineListAllowEmpty<T>(
 					prop.name,
 					this.DefaultValue,
-					this.NewEntry,
+					{ this.NewEntry as T },
 					{ this.ElementValidator(it as T) }
 				) as ModConfigSpec.ConfigValue<MutableList<T>>
+				
 				return ListNativeDelegate<T>(configValue )
 			} else {
 				val codec = defaultCodec(this.clazz.java)

@@ -5,13 +5,13 @@ import net.minecraft.resources.*
 import net.neoforged.neoforge.server.*
 
 
-val Dimensions: List<ResourceLocation>
+val Dimensions: List<Identifier>
 	get() {
 //		if (EffectiveSide.get() == LogicalSide.SERVER) {
 			val regis = ServerLifecycleHooks.getCurrentServer()!!.registryAccess().lookup(Registries.DIMENSION).get()
 			return buildList {
 				for (entry in regis.entrySet()) {
-					add(entry.key.location())
+					add(entry.key.identifier())
 				}
 			}
 //		}

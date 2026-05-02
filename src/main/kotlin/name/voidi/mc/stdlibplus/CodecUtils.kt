@@ -20,7 +20,7 @@ fun <T> defaultCodec(
 	clazz: Class<T>
 ): Codec<T> {
 	return when (clazz) {
-		ResourceLocation::class.java -> ResourceLocation.CODEC
+		Identifier::class.java -> Identifier.CODEC
 		BlockPos::class.java -> BlockPos.CODEC
 		GlobalPos::class.java -> GlobalPos.CODEC
 		else -> throw UnsupportedOperationException("There is no suitable codec for ${clazz.canonicalName}")

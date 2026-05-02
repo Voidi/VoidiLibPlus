@@ -2,9 +2,10 @@ package name.voidi.mc.stdlibplus
 
 import name.voidi.mc.stdlibplus.extensions.display
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.debug.DebugScreenEntries
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus
 import net.minecraft.client.gui.components.debug.DebugScreenProfile
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer
@@ -33,14 +34,15 @@ class ClientEntryPoint(
 	init {
 		// register a generic debug screen entry
 		modEventBus.addListener { event: RegisterDebugEntriesEvent ->
-			ResourceLocation.fromNamespaceAndPath(MODID, "development_debug").let { path ->
+			Identifier.fromNamespaceAndPath(MODID, "development_debug").let { path ->
+				
 				event.register(path, DevelopmentDebugEntry)
-				event.includeInProfile(path, DebugScreenProfile.DEFAULT, DebugScreenEntryStatus.NEVER)
+				event.includeInProfile(path, DebugScreenProfile.DEFAULT, DebugScreenEntryStatus.IN_OVERLAY)
 			}
 		}
 	
-		DevelopmentDebugEntry.DebugLines += { _, _, _, _ ->
-			"Movement: ${Minecraft.getInstance().player!!.deltaMovement.display}"
+		DevelopmentDebugEntry.AppendLines[DebugScreenEntries.PLAYER_POSITION] = { _, _, _, _ ->
+			"Movement: ${Minecraft.getInstance().player?.deltaMovement?.display}"
 		}
 	}
 }
