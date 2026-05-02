@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.*
 import java.util.stream.Stream
 
+//TODO complete
 class StringOps : DynamicOps<String> {
 	
 	companion object {

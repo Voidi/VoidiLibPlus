@@ -4,6 +4,7 @@ import com.mojang.serialization.*
 import net.minecraft.core.*
 import net.minecraft.resources.*
 
+//TODO refactor
 //val <T> T.SuitableCodec: Codec<T>?
 //	get() {
 //		val codec: Codec<T> = when (this) {

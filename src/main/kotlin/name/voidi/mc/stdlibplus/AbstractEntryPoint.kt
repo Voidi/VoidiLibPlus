@@ -14,6 +14,7 @@ import net.neoforged.neoforge.registries.*
 import org.slf4j.*
 import thedarkcolour.kotlinforforge.neoforge.forge.*
 
+//TODO DateGen System
 abstract class AbstractEntryPoint(
 	override val MOD_ID: String, override val modEventBus: IEventBus, override val modContainer: ModContainer, dist: Dist
 ) : ModEntryPoint {
@@ -36,7 +37,7 @@ abstract class AbstractEntryPoint(
 		Registry_DataComponents.register(modEventBus)
 		Registry_Items.register(modEventBus)
 		
-		//Cache loading storing methods for serialized lists
+		//Cache for serialized lists in config system
 		modEventBus.register(ObjectListCache)
 
 		runWhenOn(Dist.CLIENT) {
@@ -91,6 +92,7 @@ abstract class AbstractEntryPoint(
 		this.LOGGER.info(message)
 	}
 
+	//TODO rework after 26.1 ?
 //	fun <T : GameRules.Value<T>> registerGamerule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> {
 //		GameRules.register("${this.ID}:$name", category, type)
 //	}

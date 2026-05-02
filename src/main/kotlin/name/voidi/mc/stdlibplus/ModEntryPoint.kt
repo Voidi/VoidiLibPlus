@@ -12,7 +12,9 @@ interface ModEntryPoint {
 	val modContainer: ModContainer
 	
 	val LOGGER: Logger
+
 	fun onCommonSetup(event: FMLCommonSetupEvent) {}
+
 	fun onDateGenClient(event: GatherDataEvent.Client) {
 	}
 }

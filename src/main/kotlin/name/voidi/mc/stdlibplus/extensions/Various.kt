@@ -1,8 +1,5 @@
 package name.voidi.mc.stdlibplus.extensions
 
-import net.minecraft.advancements.Advancement
-import net.minecraft.advancements.AdvancementRequirements
-import net.minecraft.advancements.Criterion
 import net.minecraft.core.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
@@ -26,9 +23,6 @@ operator fun TagKey<Item>.contains(stack: ItemStack): Boolean {
 operator fun Iterable<Identifier>.contains(block: Block): Boolean {
 	return block.ResourceLocation in this
 }
-//operator fun Iterable<ResourceLocation>.contains(block: BlockState): Boolean {
-//	return block.block.ResourceLocation in this
-//}
 
 operator fun TagKey<Block>.contains(block: Block): Boolean {
 	return block.defaultBlockState().`is`(this)

@@ -7,13 +7,11 @@ import net.neoforged.neoforge.server.*
 
 val Dimensions: List<Identifier>
 	get() {
-//		if (EffectiveSide.get() == LogicalSide.SERVER) {
-			val regis = ServerLifecycleHooks.getCurrentServer()!!.registryAccess().lookup(Registries.DIMENSION).get()
-			return buildList {
-				for (entry in regis.entrySet()) {
-					add(entry.key.identifier())
-				}
+		// this seems to work on the physicial client
+		val regis = ServerLifecycleHooks.getCurrentServer()!!.registryAccess().lookup(Registries.DIMENSION).get()
+		return buildList {
+			for (entry in regis.entrySet()) {
+				add(entry.key.identifier())
 			}
-//		}
-//		return emptyList()
+		}
 	}

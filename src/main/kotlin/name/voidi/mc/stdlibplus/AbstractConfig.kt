@@ -30,13 +30,10 @@ object ObjectListCache {
 		}
 	}
 	
-	@SubscribeEvent
-	fun onUnloadCache(event: ModConfigEvent.Unloading) {
-//		MOD.LOGGER.debug("Write cached Values into serilized Lists")
-//		for (property in listProperties) {
-//			property.saveFromCache()
-//		}
-	}
+	//not needed, fired when unconnect or server stopped,
+//	@SubscribeEvent
+//	fun onUnloadCache(event: ModConfigEvent.Unloading) {
+//	}
 }
 
 abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Builder) {
