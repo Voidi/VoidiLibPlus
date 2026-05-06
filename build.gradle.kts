@@ -30,10 +30,10 @@ group = mod_group_id
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error.
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
-  val mod_license: String by project
-  val mod_authors: String by project
+	val mod_license: String by project
+	val mod_authors: String by project
 	val mod_credits: String by project
-  val mod_description: String by project
+	val mod_description: String by project
 	val replaceProperties = mapOf(
 			"minecraft_version"       to libs.versions.minecraft.get(),
 			"minecraft_version_range" to libs.versions.minecraftRange.get(),
@@ -89,8 +89,8 @@ sourceSets {
 	main {
 		resources {
 			srcDir("src/generated/resources")
-      // Include the output of "generateModMetadata" as an input directory for the build this works with both building through Gradle and the IDE.
-      srcDir(generateModMetadata)
+			// Include the output of "generateModMetadata" as an input directory for the build this works with both building through Gradle and the IDE.
+			srcDir(generateModMetadata)
 		}
 	}
 	register("datagen") {
@@ -206,14 +206,14 @@ publishing {
 			from(components["java"])
 		}
 	}
-  repositories {
-    maven {
-      name = "GitHubPackages"
-      setUrl("https://maven.pkg.github.com/Voidi/${mod_name}")
-      credentials {
-        username = System.getenv("GITHUB_USERNAME")
-        password = System.getenv("GITHUB_TOKEN")
-      }
-    }
+	repositories {
+		maven {
+			name = "OSSRH"
+			setUrl("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+			credentials {
+				username = System.getenv("MAVEN_USERNAME")
+				password = System.getenv("MAVEN_PASSWORD")
+			}
+		}
 	}
 }
