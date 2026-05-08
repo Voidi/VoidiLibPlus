@@ -4,10 +4,10 @@ import org.jetbrains.kotlin.gradle.utils.extendsFrom
 plugins {
 	`java-library`
 	alias(libs.plugins.kotlin)
-//	kotlin("jvm") version "2.2.21"
 	alias(libs.plugins.moddev)
 	idea
-	id("maven-publish")
+  id("com.vanniktech.maven.publish") version "0.36.0"
+	id("signing")
 }
 
 tasks.named<Wrapper>("wrapper") {
@@ -23,17 +23,17 @@ val mod_id: String by project
 val mod_name: String by project
 val mod_version: String by project
 val mod_group_id: String by project
-
+val mod_license: String by project
+val mod_authors: String by project
+val mod_credits: String by project
+val mod_description: String by project
 version = mod_version
 group = mod_group_id
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error.
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
-	val mod_license: String by project
-	val mod_authors: String by project
-	val mod_credits: String by project
-	val mod_description: String by project
+
 	val replaceProperties = mapOf(
 			"minecraft_version"       to libs.versions.minecraft.get(),
 			"minecraft_version_range" to libs.versions.minecraftRange.get(),
@@ -73,8 +73,8 @@ base {
 }
 
 java {
-	withJavadocJar()
-	withSourcesJar()
+//	withJavadocJar()
+//	withSourcesJar()
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
@@ -200,20 +200,38 @@ idea {
 	}
 }
 
-publishing {
-	publications {
-		register<MavenPublication>("maven") {
-			from(components["java"])
-		}
-	}
-	repositories {
-		maven {
-			name = "OSSRH"
-			setUrl("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
-			credentials {
-				username = System.getenv("MAVEN_USERNAME")
-				password = System.getenv("MAVEN_PASSWORD")
-			}
-		}
-	}
+signing {
+	sign(publishing.publications)
+}
+mavenPublishing {
+  publishToMavenCentral()
+
+  signAllPublications()
+  coordinates(mod_group_id, mod_id, mod_version)
+	
+  pom {
+		name.set(mod_name)
+    description.set(mod_description)
+    inceptionYear.set("2025")
+    url.set("https://github.com/${mod_authors}/${mod_id}/")
+    licenses {
+      license {
+        name.set(mod_license)
+        url.set("https://choosealicense.com/licenses/agpl-3.0/")
+        distribution.set("https://spdx.org/licenses/AGPL-3.0-or-later.html")
+      }
+    }
+    developers {
+      developer {
+        id.set(mod_authors)
+        name.set("Tobias Wohlfarth")
+        url.set("https://github.com/${mod_authors}/")
+      }
+    }
+    scm {
+      url.set("https://github.com/${mod_authors}/${mod_id}/")
+      connection.set("scm:git:git://github.com/${mod_authors}/${mod_id}.git")
+      developerConnection.set("scm:git:ssh://git@github.com/${mod_authors}/${mod_id}.git")
+    }
+  }
 }
