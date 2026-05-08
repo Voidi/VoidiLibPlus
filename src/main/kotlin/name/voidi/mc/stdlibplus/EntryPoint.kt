@@ -1,16 +1,14 @@
 package name.voidi.mc.stdlibplus
 
-import name.voidi.mc.stdlibplus.extensions.display
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.components.debug.DebugScreenEntries
-import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus
-import net.minecraft.client.gui.components.debug.DebugScreenProfile
-import net.minecraft.resources.Identifier
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.IEventBus
-import net.neoforged.fml.ModContainer
-import net.neoforged.fml.common.Mod
-import net.neoforged.neoforge.client.event.RegisterDebugEntriesEvent
+import name.voidi.mc.stdlibplus.extensions.*
+import net.minecraft.client.*
+import net.minecraft.client.gui.components.debug.*
+import net.minecraft.resources.*
+import net.neoforged.api.distmarker.*
+import net.neoforged.bus.api.*
+import net.neoforged.fml.*
+import net.neoforged.fml.common.*
+import net.neoforged.neoforge.client.event.*
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 const val MODID = "voidilibplus"
@@ -35,12 +33,11 @@ class ClientEntryPoint(
 		// register a generic debug screen entry
 		modEventBus.addListener { event: RegisterDebugEntriesEvent ->
 			Identifier.fromNamespaceAndPath(MODID, "development_debug").let { path ->
-				
 				event.register(path, DevelopmentDebugEntry)
 				event.includeInProfile(path, DebugScreenProfile.DEFAULT, DebugScreenEntryStatus.IN_OVERLAY)
 			}
 		}
-	
+		
 		DevelopmentDebugEntry.AppendLines[DebugScreenEntries.PLAYER_POSITION] = { _, _, _, _ ->
 			"Movement: ${Minecraft.getInstance().player?.deltaMovement?.display}"
 		}

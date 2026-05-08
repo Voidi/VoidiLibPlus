@@ -1,6 +1,6 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "stdlibplus"
+rootProject.name = "voidilibplus"
 
 pluginManagement {
 	repositories {
