@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer
 import net.minecraft.client.gui.components.debug.DebugScreenEntry

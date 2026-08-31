@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer

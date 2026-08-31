@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus.extensions
+package name.voidi.mc.voidilibplus.extensions
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction

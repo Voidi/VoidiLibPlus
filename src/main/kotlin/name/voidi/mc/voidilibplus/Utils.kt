@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import net.minecraft.core.registries.*
 import net.minecraft.resources.*

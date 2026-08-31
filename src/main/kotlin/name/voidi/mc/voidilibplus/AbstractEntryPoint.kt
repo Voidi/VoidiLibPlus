@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import net.minecraft.core.registries.*
 import net.minecraft.resources.*
@@ -74,6 +74,14 @@ abstract class AbstractEntryPoint(
 		return TagKey.create<Block>(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.MOD_ID, id))
 	}
 	
+	fun trace(marker: Marker, vararg message: Any?) {
+		this.LOGGER.debug(marker, message.joinToString(separator = ";"))
+	}
+
+	fun trace(vararg message: Any?) {
+		this.LOGGER.debug(message.joinToString(separator = ";"))
+	}
+	
 	fun debug(marker: Marker, vararg message: Any?) {
 		this.LOGGER.debug(marker, message.joinToString(separator = ";"))
 	}
@@ -81,7 +89,6 @@ abstract class AbstractEntryPoint(
 	fun debug(vararg message: Any?) {
 		this.LOGGER.debug(message.joinToString(separator = ";"))
 	}
-	
 	
 	fun info(marker: Marker? = null, message: Any?) {
 		if (marker == null) this.LOGGER.info(message.toString())

@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.*

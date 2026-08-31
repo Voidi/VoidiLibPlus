@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus.extensions
+package name.voidi.mc.voidilibplus.extensions
 
 import com.mojang.authlib.GameProfile
 import net.minecraft.util.Util

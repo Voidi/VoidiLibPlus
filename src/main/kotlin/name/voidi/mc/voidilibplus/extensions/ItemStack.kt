@@ -1,6 +1,6 @@
-package name.voidi.mc.stdlibplus.extensions
+package name.voidi.mc.voidilibplus.extensions
 
-import name.voidi.mc.stdlibplus.DataComponentFactory
+import name.voidi.mc.voidilibplus.DataComponentFactory
 import net.minecraft.world.item.ItemStack
 
 fun <T : DataComponentFactory.DataComponent> ItemStack.set(dataComponent: Pair<DataComponentFactory<*, T>, T>): ItemStack {

@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus.extensions
+package name.voidi.mc.voidilibplus.extensions
 
 import net.minecraft.world.phys.Vec3
 

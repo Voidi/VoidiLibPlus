@@ -1,4 +1,4 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
 import com.mojang.serialization.*
 import net.minecraft.core.registries.Registries
@@ -11,6 +11,9 @@ import net.neoforged.fml.event.config.*
 import net.neoforged.neoforge.common.*
 import kotlin.reflect.*
 
+/**
+ * Static thing to do conversion between usable Config objects and there string representation in the config file
+ */
 object ObjectListCache {
 	internal val listProperties = mutableListOf<ListSerializedDelegate<*>>()
 	
@@ -58,6 +61,12 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 		builder.builderBlock()
 		return builder
 	}
+
+	protected fun IntegerProperty(builderBlock: IntegerPropertyBuilder.() -> Unit): IntegerPropertyBuilder {
+		val builder = IntegerPropertyBuilder()
+		builder.builderBlock()
+		return builder
+	}
 	
 	protected inline fun <reified T : Any> ListProperty(builderBlock: ListPropertyBuilder<T>.() -> Unit): ListPropertyBuilder<T> {
 		val builder = ListPropertyBuilder<T>(T::class)
@@ -66,6 +75,9 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 	}
 	
 	// region Builder
+	/**
+	 * The builder are delegate provider
+	 */
 	
 	inner class SectionBuilder<T>(val sectionProvider: () -> T) {
 		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): SectionDelegate<T> {
@@ -96,6 +108,16 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): BooleanPropertyDelegate {
 			this.genericThings(thisRef, prop)
 			return BooleanPropertyDelegate(builder.define(prop.name, DefaultValue))
+		}
+	}
+	
+	inner class IntegerPropertyBuilder() : AbstractPropertyBuilder() {
+		var MaximumValue = Int.MAX_VALUE
+		var MinimumValue = Int.MIN_VALUE
+		var DefaultValue = 0
+		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): IntegerPropertyDelegate {
+			this.genericThings(thisRef, prop)
+			return IntegerPropertyDelegate(builder.defineInRange(prop.name, DefaultValue, MinimumValue, MaximumValue))
 		}
 	}
 	
@@ -152,6 +174,16 @@ class BooleanPropertyDelegate(val valueSpec: ModConfigSpec.BooleanValue) {
 	}
 	
 	operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
+		this.valueSpec.set(value)
+	}
+}
+
+class IntegerPropertyDelegate(val valueSpec: ModConfigSpec.IntValue) {
+	operator fun getValue(thisRef: Any?, property: KProperty<*>): Int {
+		return this.valueSpec.get()
+	}
+	
+	operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
 		this.valueSpec.set(value)
 	}
 }

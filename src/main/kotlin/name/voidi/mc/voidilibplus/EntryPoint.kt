@@ -1,6 +1,6 @@
-package name.voidi.mc.stdlibplus
+package name.voidi.mc.voidilibplus
 
-import name.voidi.mc.stdlibplus.extensions.*
+import name.voidi.mc.voidilibplus.extensions.*
 import net.minecraft.client.*
 import net.minecraft.client.gui.components.debug.*
 import net.minecraft.resources.*
