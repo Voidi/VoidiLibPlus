@@ -78,10 +78,10 @@ java {
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 kotlin.compilerOptions {
-	jvmTarget.set(JvmTarget.JVM_21)
+	jvmTarget.set(JvmTarget.JVM_25)
 	freeCompilerArgs.add("-Xjvm-default=all")
 }
 
