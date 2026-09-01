@@ -19,14 +19,14 @@ tasks.named<Wrapper>("wrapper") {
 	distributionType = Wrapper.DistributionType.BIN
 }
 
-val mod_id: String by project
-val mod_name: String by project
-val mod_version: String by project
-val mod_group_id: String by project
-val mod_license: String by project
-val mod_authors: String by project
-val mod_credits: String by project
-val mod_description: String by project
+val mod_id = project.property("mod_id") as String
+val mod_name = project.property("mod_name") as String
+val mod_version = project.property("mod_version") as String
+val mod_group_id = project.property("mod_group_id") as String
+val mod_license = project.property("mod_license") as String
+val mod_authors = project.property("mod_authors") as String
+val mod_credits = project.property("mod_credits") as String
+val mod_description = project.property("mod_description") as String
 version = mod_version
 group = mod_group_id
 
@@ -77,11 +77,10 @@ java {
 //	withSourcesJar()
 }
 
-// Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 kotlin.compilerOptions {
-	jvmTarget.set(JvmTarget.JVM_25)
+	jvmTarget = JvmTarget.JVM_25
 	freeCompilerArgs.add("-Xjvm-default=all")
 }
 
@@ -104,11 +103,6 @@ sourceSets {
 neoForge {
 	// Specify the version of NeoForge to use.
 	version = libs.versions.neoforge.get()
-
-	parchment {
-		mappingsVersion = libs.versions.parchment.get()
-		minecraftVersion = libs.versions.minecraft.get()
-	}
 
 	mods {
 		// define mod <-> source bindings
@@ -136,8 +130,8 @@ neoForge {
 		register("client") {
 			client()
 			programArguments.addAll("--quickPlaySingleplayer", "New World")
-			if (project.file("clientLog4j2.xml").exists())
-				loggingConfigFile = project.file("clientLog4j2.xml")
+			if (layout.projectDirectory.file("clientLog4j2.xml").asFile.exists())
+				loggingConfigFile = layout.projectDirectory.file("clientLog4j2.xml")
 
 			// Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
 			systemProperty("neoforge.enabledGameTestNamespaces", mod_id)

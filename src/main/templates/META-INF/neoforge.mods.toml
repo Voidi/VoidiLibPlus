@@ -14,6 +14,8 @@ loaderVersion="${kff_version_range}" #mandatory
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="${mod_license}"
 
+licenseURL="https://spdx.org/licenses/${mod_license}.html" #optional
+
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/Voidi/${mod_id}/issues" #optional
 
@@ -36,7 +38,8 @@ displayName="${mod_name}" #mandatory
 displayURL="https://modrinth.com/project/${mod_id}/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="logo.png" #optional
+iconFile="logo.png" #optional
+bannerFile="banner.png" #optional
 
 # A text field displayed in the mod UI
 credits="${mod_credits}" #optional

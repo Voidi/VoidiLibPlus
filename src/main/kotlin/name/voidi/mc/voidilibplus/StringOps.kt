@@ -36,6 +36,20 @@ class StringOps : DynamicOps<String> {
 		return null
 	}
 	
+	override fun getBooleanValue(input: String?): DataResult<Boolean?>? {
+		if (input == null)
+			return null
+		return when (input) {
+			"true" -> DataResult.success(true)
+			"false" -> DataResult.success(false)
+			else -> DataResult.error { "Invalid boolean value: $input" }
+		}
+	}
+
+	override fun createBoolean(value: Boolean): String? {
+		return if (value) "true" else "false"
+	}
+
 	override fun getNumberValue(input: String?): DataResult<Number?>? {
 		if (input == null)
 			return null

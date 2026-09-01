@@ -1,18 +1,18 @@
 [versions]
 # Minecraft
-minecraft = "1.21.11"
-minecraftRange = "[1.21.11, )"
-neoforge = "21.11.42"
-neoforgeRange = "[21.11.42, )"
+minecraft = "26.2"
+minecraftRange = "[26.2, )"
+neoforge = "26.2.0.75"
+neoforgeRange = "[26.2.0.75, )"
 loaderRange = "[6, )"
-parchment = "2025.12.20"
+
 # Plugins
-moddev = "2.0.141"
-kotlin = "2.3.10"
+moddev = "2.0.144"
+kotlin = "2.4.0"
 
 # Dependencies
-kff = "6.2.0"
-kffRange = "[6.2.0, )"
+kff = "6.3.0"
+kffRange = "[6.3.0, )"
 
 [libraries]
 kff = { module = "thedarkcolour:kotlinforforge-neoforge", version.ref = "kff" }

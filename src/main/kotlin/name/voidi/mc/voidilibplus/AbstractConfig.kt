@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.neoforged.bus.api.*
 import net.neoforged.fml.event.config.*
-import net.neoforged.neoforge.common.*
+import net.neoforged.neoforge.common.ModConfigSpec
 import kotlin.reflect.*
 
 /**
