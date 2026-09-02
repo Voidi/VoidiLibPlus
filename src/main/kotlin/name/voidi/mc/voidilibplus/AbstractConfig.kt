@@ -125,6 +125,7 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 		var DefaultValue: () -> List<T> = { emptyList<T>() }
 		var NewEntry: () -> T? = { DefaultValue().firstOrNull() }
 		var ElementValidator: (T) -> Boolean = { true }
+
 		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): ListPropertyDelegate<T> {
 			this.genericThings(thisRef, prop)
 			if (
@@ -150,7 +151,14 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 					prop.name,
 					{ this.DefaultValue().map { it.toString() } },
 					{ this.NewEntry().toString() },
-					{ this.ElementValidator(codec.parse(StringOps.INSTANCE,it as String).orThrow) }
+					{
+						val data = codec.parse(StringOps.INSTANCE,it as String)
+						try {
+							this.ElementValidator(data.orThrow)
+						} catch (e: IllegalStateException) {
+							false
+						}
+					}
 				) as ModConfigSpec.ConfigValue<MutableList<String>>
 				val delegate = ListSerializedDelegate<T>(configValue, codec)
 				ObjectListCache.listProperties += delegate
