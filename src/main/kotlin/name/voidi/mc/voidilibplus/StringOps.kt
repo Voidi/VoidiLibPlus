@@ -4,6 +4,13 @@ import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.*
 import java.util.stream.Stream
 
+const val RECORD_SEPERATOR = '\u001E'
+const val UNIT_SEPERATOR = '\u001F'
+const val START_TEXT = '\u0002'
+const val END_TEXT = '\u0003'
+const val LIST_CONTROL = '\u0011'
+const val MAP_CONTROL = '\u0012'
+
 //TODO complete
 class StringOps : DynamicOps<String> {
 	
@@ -73,7 +80,7 @@ class StringOps : DynamicOps<String> {
 	}
 	
 	override fun mergeToList(list: String?, value: String?): DataResult<String?>? {
-		return DataResult.success("$list$value\u001E")
+		return DataResult.success("$START_TEXT$list$RECORD_SEPERATOR$value$END_TEXT")
 	}
 	
 	override fun mergeToMap(
@@ -91,11 +98,13 @@ class StringOps : DynamicOps<String> {
 	override fun createMap(map: Stream<Pair<String?, String?>?>?): String? {
 		map?.let {
 			return buildString {
+				append(MAP_CONTROL)
+				append(START_TEXT)
 				for(entry in it.toList()) {
-					append("\u001E${entry!!.first}\u001F${entry.second}")
+					append("${entry!!.first}$UNIT_SEPERATOR${entry.second}$RECORD_SEPERATOR")
 				}
-				append("\u001E")
-			}
+				
+			}.dropLast(1) + END_TEXT
 		}
 		return null
 	}
@@ -105,12 +114,24 @@ class StringOps : DynamicOps<String> {
 	}
 	
 	override fun createList(input: Stream<String?>?): String? {
-		return input?.let {
-			it.toList().joinToString(prefix = "\u001E", separator = "\u001E", postfix = "\u001E")
-		}
+		return "$LIST_CONTROL$START_TEXT" + input?.toList()?.joinToString(separator = RECORD_SEPERATOR.toString()) + END_TEXT
 	}
 	
 	override fun remove(input: String?, key: String?): String? {
+		if(input == null)
+			return null
+		if(input[0] == MAP_CONTROL) {
+			val map = input.drop(1).dropLast(1).split(RECORD_SEPERATOR).associate<String, String, String> { entry: String ->
+				entry.split(UNIT_SEPERATOR).let { kotlin.Pair(it[0], it[1]) }
+			}.filterKeys { it != key }
+			return buildString {
+				append(MAP_CONTROL)
+				append(START_TEXT)
+				for((key, value) in map) {
+					append("$key$UNIT_SEPERATOR$value$RECORD_SEPERATOR")
+				}
+				
+			}.dropLast(1) + END_TEXT		}
 		return input
 	}
 }
