@@ -1,8 +1,9 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.technical
 
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.*
 import java.util.stream.Stream
+import kotlin.collections.iterator
 
 const val RECORD_SEPERATOR = '\u001E'
 const val UNIT_SEPERATOR = '\u001F'

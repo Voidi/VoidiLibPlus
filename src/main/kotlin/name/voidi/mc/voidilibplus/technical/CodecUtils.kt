@@ -1,5 +1,6 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.technical
 
+import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.*
 import net.minecraft.core.*
 import net.minecraft.resources.*
@@ -71,7 +72,7 @@ fun <K, V> pairListMap(keyCodec: Codec<K>, valueCodec: Codec<V>): Codec<MutableM
 		}, { map ->
 			return@xmap buildList {
 				for (entry in map.entries) {
-					add(com.mojang.datafixers.util.Pair(entry.key, entry.value))
+					add(Pair(entry.key, entry.value))
 				}
 			}
 		})

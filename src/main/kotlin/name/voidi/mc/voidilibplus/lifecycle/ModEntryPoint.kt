@@ -1,4 +1,4 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.lifecycle
 
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer

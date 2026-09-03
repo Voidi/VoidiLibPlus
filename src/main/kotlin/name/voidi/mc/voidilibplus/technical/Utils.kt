@@ -1,4 +1,4 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.technical
 
 import com.mojang.serialization.*
 import io.netty.buffer.*

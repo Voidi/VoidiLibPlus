@@ -1,6 +1,8 @@
 package name.voidi.mc.voidilibplus
 
+import name.voidi.mc.voidilibplus.client.DevelopmentDebugEntry
 import name.voidi.mc.voidilibplus.extensions.*
+import name.voidi.mc.voidilibplus.lifecycle.AbstractEntryPoint
 import net.minecraft.client.*
 import net.minecraft.client.gui.components.debug.*
 import net.minecraft.resources.*
@@ -8,6 +10,7 @@ import net.neoforged.api.distmarker.*
 import net.neoforged.bus.api.*
 import net.neoforged.fml.*
 import net.neoforged.fml.common.*
+import net.neoforged.fml.config.ModConfig
 import net.neoforged.neoforge.client.event.*
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file

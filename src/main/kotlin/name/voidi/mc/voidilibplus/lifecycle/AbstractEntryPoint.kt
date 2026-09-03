@@ -1,5 +1,7 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.lifecycle
 
+import name.voidi.mc.voidilibplus.lifecycle.config.AbstractConfig
+import name.voidi.mc.voidilibplus.lifecycle.config.ObjectListCache
 import net.minecraft.core.registries.*
 import net.minecraft.resources.*
 import net.minecraft.tags.*
@@ -103,6 +105,5 @@ abstract class AbstractEntryPoint(
 //	fun <T : GameRules.Value<T>> registerGamerule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> {
 //		GameRules.register("${this.ID}:$name", category, type)
 //	}
-	
-}
 
+}

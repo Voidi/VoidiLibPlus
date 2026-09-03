@@ -1,10 +1,11 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.client
 
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer
 import net.minecraft.client.gui.components.debug.DebugScreenEntry
 import net.minecraft.resources.Identifier
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.chunk.LevelChunk
+import kotlin.collections.iterator
 
 object DevelopmentDebugEntry : DebugScreenEntry {
 	val DebugLines: MutableList<(

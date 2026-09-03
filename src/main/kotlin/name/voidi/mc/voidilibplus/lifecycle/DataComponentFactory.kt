@@ -1,6 +1,7 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.lifecycle
 
 import com.mojang.serialization.Codec
+import name.voidi.mc.voidilibplus.technical.register
 import net.minecraft.core.component.DataComponentType
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister

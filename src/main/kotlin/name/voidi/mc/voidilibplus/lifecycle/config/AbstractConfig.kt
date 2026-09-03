@@ -1,43 +1,15 @@
-package name.voidi.mc.voidilibplus
+package name.voidi.mc.voidilibplus.lifecycle.config
 
-import com.mojang.serialization.*
+import name.voidi.mc.voidilibplus.technical.StringOps
+import name.voidi.mc.voidilibplus.technical.defaultCodec
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
-import net.neoforged.bus.api.*
-import net.neoforged.fml.event.config.*
 import net.neoforged.neoforge.common.ModConfigSpec
+import java.util.function.Predicate
 import kotlin.reflect.*
-
-/**
- * Static thing to do conversion between usable Config objects and there string representation in the config file
- */
-object ObjectListCache {
-	internal val listProperties = mutableListOf<ListSerializedDelegate<*>>()
-	
-	@SubscribeEvent
-	fun onLoadForCache(event: ModConfigEvent.Loading) {
-		MOD.LOGGER.debug("Caching deserilized Lists")
-		for (property in listProperties) {
-			property.loadIntoCache()
-		}
-	}
-	
-	@SubscribeEvent
-	fun onReloadForCache(event: ModConfigEvent.Reloading) {
-		MOD.LOGGER.debug("Caching deserilized Lists")
-		for (property in listProperties) {
-			property.loadIntoCache()
-		}
-	}
-	
-	//not needed, fired when unconnect or server stopped,
-//	@SubscribeEvent
-//	fun onUnloadCache(event: ModConfigEvent.Unloading) {
-//	}
-}
 
 abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Builder) {
 	
@@ -67,7 +39,13 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 		builder.builderBlock()
 		return builder
 	}
-	
+
+	protected fun StringProperty(builderBlock: StringPropertyBuilder.() -> Unit): StringPropertyBuilder {
+		val builder = StringPropertyBuilder()
+		builder.builderBlock()
+		return builder
+	}
+
 	protected inline fun <reified T : Any> ListProperty(builderBlock: ListPropertyBuilder<T>.() -> Unit): ListPropertyBuilder<T> {
 		val builder = ListPropertyBuilder<T>(T::class)
 		builder.builderBlock()
@@ -121,6 +99,19 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 		}
 	}
 	
+	inner class StringPropertyBuilder() : AbstractPropertyBuilder() {
+		var DefaultValue: String = ""
+		var ElementValidator: (String?) -> Boolean = { true }
+		operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): StringPropertyDelegate {
+			this.genericThings(thisRef, prop)
+			return StringPropertyDelegate(builder.define<String>(prop.name, DefaultValue, Predicate<Any>{
+				if(it == null)
+					return@Predicate true
+				this.ElementValidator(it as String)
+			}))
+		}
+	}
+	
 	inner class ListPropertyBuilder<T : Any>(protected val clazz: KClass<T>) : AbstractPropertyBuilder() {
 		var DefaultValue: () -> List<T> = { emptyList<T>() }
 		var NewEntry: () -> T? = { DefaultValue().firstOrNull() }
@@ -169,90 +160,3 @@ abstract class AbstractConfig(val MOD_ID: String, val builder: ModConfigSpec.Bui
 	
 	// endregion
 }
-
-class SectionDelegate<T>(val section: T) {
-	operator fun getValue(thisRef: Any, property: KProperty<*>): T {
-		return this.section
-	}
-}
-
-class BooleanPropertyDelegate(val valueSpec: ModConfigSpec.BooleanValue) {
-	operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
-		return this.valueSpec.get()
-	}
-	
-	operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
-		this.valueSpec.set(value)
-	}
-}
-
-class IntegerPropertyDelegate(val valueSpec: ModConfigSpec.IntValue) {
-	operator fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-		return this.valueSpec.get()
-	}
-	
-	operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
-		this.valueSpec.set(value)
-	}
-}
-
-interface ListPropertyDelegate<T> {
-	operator fun getValue(thisRef: Any?, property: KProperty<*>): MutableList<T>
-	operator fun setValue(thisRef: Any?, property: KProperty<*>, value: MutableList<T>)
-}
-
-class ListNativeDelegate<T>(val valueSpec: ModConfigSpec.ConfigValue<MutableList<T>>) :
-	ListPropertyDelegate<T> {
-	override operator fun getValue(thisRef: Any?, property: KProperty<*>): MutableList<T> {
-		return this.valueSpec.get()
-	}
-	
-	override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: MutableList<T>) {
-		this.valueSpec.set(value)
-	}
-}
-
-open class ListSerializedDelegate<T : Any>(
-	val valueSpec: ModConfigSpec.ConfigValue<MutableList<String>>,
-	val codec: Codec<T>
-) : ListPropertyDelegate<T> {
-	var DeserializedCache: MutableList<T> = mutableListOf()
-	
-	protected fun encode(thing: T): String {
-		return this.codec.encodeStart(StringOps.INSTANCE, thing).result().get()
-	}
-	
-	protected fun decode(thing: String): T {
-		return codec.parse(StringOps.INSTANCE, thing).result().get()
-	}
-	
-	fun loadIntoCache() {
-		this.DeserializedCache =
-			this.valueSpec.get().map { stringRepresentation -> decode(stringRepresentation) }.toMutableList()
-	}
-	
-	fun saveFromCache() {
-		this.valueSpec.set(this.DeserializedCache.map { encode(it) }.toMutableList())
-	}
-	
-	override operator fun getValue(thisRef: Any?, property: KProperty<*>): MutableList<T> {
-		return this.DeserializedCache
-	}
-	
-	override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: MutableList<T>) {
-		this.DeserializedCache = value
-	}
-}
-
-val ModConfigSpec.Builder.completeCurrentPath: String
-	get() {
-		val field = ModConfigSpec.Builder::class.java.getDeclaredField("currentPath")
-		field.isAccessible = true
-		val fieldType = field.type
-		
-		@Suppress("UNCHECKED_CAST")
-		val path: List<String> = fieldType.cast(field.get(this)) as List<String>
-		if (path.isEmpty())
-			return ""
-		return path.joinToString(postfix = ".")
-	}
