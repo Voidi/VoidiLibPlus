@@ -1,8 +1,9 @@
 package name.voidi.mc.voidilibplus.lifecycle
 
-import name.voidi.mc.voidilibplus.lifecycle.config.AbstractConfig
-import name.voidi.mc.voidilibplus.lifecycle.config.ObjectListCache
+import name.voidi.mc.voidilibplus.datagen.*
+import name.voidi.mc.voidilibplus.lifecycle.config.*
 import net.minecraft.core.registries.*
+import net.minecraft.data.advancements.*
 import net.minecraft.resources.*
 import net.minecraft.tags.*
 import net.minecraft.world.item.*
@@ -12,11 +13,11 @@ import net.neoforged.bus.api.*
 import net.neoforged.fml.*
 import net.neoforged.fml.config.*
 import net.neoforged.neoforge.client.gui.*
+import net.neoforged.neoforge.data.event.*
 import net.neoforged.neoforge.registries.*
 import org.slf4j.*
 import thedarkcolour.kotlinforforge.neoforge.forge.*
 
-//TODO DateGen System
 abstract class AbstractEntryPoint(
 	override val MOD_ID: String, override val modEventBus: IEventBus, override val modContainer: ModContainer, dist: Dist
 ) : ModEntryPoint {
@@ -24,8 +25,8 @@ abstract class AbstractEntryPoint(
 	// Directly reference a slf4j logger
 	override val LOGGER = LoggerFactory.getLogger(MOD_ID)
 	
-//	protected val DataGen_Factories: MutableList<DataGenFactory> = mutableListOf()
-
+	protected val DataGen_Factories: MutableList<DataGenFactory> = mutableListOf()
+	
 	val Registry_DataComponents: DeferredRegister.DataComponents = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MOD_ID)
 	
 	// Create a Deferred Register to hold Items which will all be registered under the "modid" namespace
@@ -41,7 +42,7 @@ abstract class AbstractEntryPoint(
 		
 		//Cache for serialized lists in config system
 		modEventBus.register(ObjectListCache)
-
+		
 		runWhenOn(Dist.CLIENT) {
 			// This will use NeoForge's ConfigurationScreen to display this mod's configs
 			this.modContainer.registerExtensionPoint(
@@ -53,17 +54,17 @@ abstract class AbstractEntryPoint(
 		}
 	}
 	
-//	override fun onDateGenClient(event: GatherDataEvent.Client) {
-//		for (factory in DataGen_Factories) {
-//			event.createProvider { output, lookupProvider ->
-//				AdvancementProvider(output, lookupProvider, listOf(GenericAdvancementsProvider(this.MOD_ID, factory)))
-//			}
-//		}
-//	}
-//
-//	fun registerDataGen(factory: DataGenFactory) {
-//		this.DataGen_Factories += factory
-//	}
+	override fun onDateGenClient(event: GatherDataEvent.Client) {
+		for (factory in DataGen_Factories) {
+			event.createProvider { output, lookupProvider ->
+				AdvancementProvider(output, lookupProvider, listOf(GenericAdvancementsProvider(this.MOD_ID, factory)))
+			}
+		}
+	}
+	
+	fun registerDataGen(factory: DataGenFactory) {
+		this.DataGen_Factories += factory
+	}
 	
 	fun <T : AbstractConfig> registerConfig(type: ModConfig.Type, config: T): T {
 		modContainer.registerConfig(type, config.builder.build())
@@ -81,7 +82,7 @@ abstract class AbstractEntryPoint(
 	fun trace(marker: Marker, vararg message: Any?) {
 		this.LOGGER.debug(marker, message.joinToString(separator = ";"))
 	}
-
+	
 	fun trace(vararg message: Any?) {
 		this.LOGGER.debug(message.joinToString(separator = ";"))
 	}
@@ -102,7 +103,7 @@ abstract class AbstractEntryPoint(
 	fun info(message: String) {
 		this.LOGGER.info(message)
 	}
-
+	
 	//TODO rework after 26.1 ?
 //	fun <T : GameRules.Value<T>> registerGamerule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> {
 //		GameRules.register("${this.ID}:$name", category, type)
