@@ -1,12 +1,12 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.utils.extendsFrom
+import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.utils.*
 
 plugins {
 	`java-library`
 	alias(libs.plugins.kotlin)
 	alias(libs.plugins.moddev)
 	idea
-  id("com.vanniktech.maven.publish") version "0.36.0"
+	id("com.vanniktech.maven.publish") version "0.36.0"
 	id("signing")
 }
 
@@ -33,22 +33,22 @@ group = mod_group_id
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error.
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
-
+	
 	val replaceProperties = mapOf(
-			"minecraft_version"       to libs.versions.minecraft.get(),
-			"minecraft_version_range" to libs.versions.minecraftRange.get(),
-			"neo_version"             to libs.versions.neoforge.get(),
-			"neo_version_range"       to libs.versions.neoforgeRange.get(),
-			"kff_version"             to libs.versions.kff.get(),
-			"kff_version_range"       to libs.versions.kffRange.get(),
-			"loader_version_range"    to libs.versions.loaderRange.get(),
-			"mod_id"                  to mod_id,
-			"mod_name"                to mod_name,
-			"mod_license"             to mod_license,
-			"mod_version"             to mod_version,
-			"mod_authors"             to mod_authors,
-			"mod_credits"             to mod_credits,
-			"mod_description"         to mod_description
+		"minecraft_version" to libs.versions.minecraft.get(),
+		"minecraft_version_range" to libs.versions.minecraftRange.get(),
+		"neo_version" to libs.versions.neoforge.get(),
+		"neo_version_range" to libs.versions.neoforgeRange.get(),
+		"kff_version" to libs.versions.kff.get(),
+		"kff_version_range" to libs.versions.kffRange.get(),
+		"loader_version_range" to libs.versions.loaderRange.get(),
+		"mod_id" to mod_id,
+		"mod_name" to mod_name,
+		"mod_license" to mod_license,
+		"mod_version" to mod_version,
+		"mod_authors" to mod_authors,
+		"mod_credits" to mod_credits,
+		"mod_description" to mod_description
 	)
 	inputs.properties(replaceProperties)
 	expand(replaceProperties)
@@ -103,7 +103,7 @@ sourceSets {
 neoForge {
 	// Specify the version of NeoForge to use.
 	version = libs.versions.neoforge.get()
-
+	
 	mods {
 		// define mod <-> source bindings
 		// these are used to tell the game which sources are for which mod
@@ -113,7 +113,7 @@ neoForge {
 			sourceSet(sourceSets.named("datagen").get())
 		}
 	}
-
+	
 	runs {
 		configureEach {
 			// Recommended logging data for a userdev environment. The markers can be added/remove as needed separated by commas.
@@ -130,19 +130,21 @@ neoForge {
 		register("client") {
 			client()
 			programArguments.addAll("--quickPlaySingleplayer", "New World")
+			programArguments.addAll("--width", "1920")
+			programArguments.addAll("--height", "1040")
 			if (layout.projectDirectory.file("clientLog4j2.xml").asFile.exists())
 				loggingConfigFile = layout.projectDirectory.file("clientLog4j2.xml")
-
+			
 			// Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
 			systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
 		}
-
+		
 		register("server") {
 			server()
 			programArgument("--nogui")
 			systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
 		}
-
+		
 		// This run config launches GameTestServer and runs all registered gametests, then exits.
 		// By default, the server will crash when no gametests are provided.
 		// The gametest system is also enabled by default for other run configs under the /test command.
@@ -150,7 +152,7 @@ neoForge {
 			type = "gameTestServer"
 			systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
 		}
-
+		
 		register("data") {
 			clientData()
 			sourceSet = sourceSets.named("datagen").get()
@@ -158,7 +160,7 @@ neoForge {
 			// Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
 			programArguments.addAll("--mod", mod_id, "--all", "--output", file("src/generated/resources/").absolutePath, "--existing", file("src/main/resources/").absolutePath)
 		}
-
+		
 		configureEach {
 			if (!gameDirectory.asFile.get().exists()) {
 				gameDirectory.asFile.get().mkdirs()
@@ -198,34 +200,34 @@ signing {
 	sign(publishing.publications)
 }
 mavenPublishing {
-  publishToMavenCentral()
-
-  signAllPublications()
-  coordinates(mod_group_id, mod_id, mod_version)
+	publishToMavenCentral()
 	
-  pom {
+	signAllPublications()
+	coordinates(mod_group_id, mod_id, mod_version)
+	
+	pom {
 		name.set(mod_name)
-    description.set(mod_description)
-    inceptionYear.set("2025")
-    url.set("https://github.com/${mod_authors}/${mod_id}/")
-    licenses {
-      license {
-        name.set(mod_license)
-        url.set("https://choosealicense.com/licenses/agpl-3.0/")
-        distribution.set("https://spdx.org/licenses/AGPL-3.0-or-later.html")
-      }
-    }
-    developers {
-      developer {
-        id.set(mod_authors)
-        name.set("Tobias Wohlfarth")
-        url.set("https://github.com/${mod_authors}/")
-      }
-    }
-    scm {
-      url.set("https://github.com/${mod_authors}/${mod_id}/")
-      connection.set("scm:git:git://github.com/${mod_authors}/${mod_id}.git")
-      developerConnection.set("scm:git:ssh://git@github.com/${mod_authors}/${mod_id}.git")
-    }
-  }
+		description.set(mod_description)
+		inceptionYear.set("2025")
+		url.set("https://github.com/${mod_authors}/${mod_id}/")
+		licenses {
+			license {
+				name.set(mod_license)
+				url.set("https://choosealicense.com/licenses/agpl-3.0/")
+				distribution.set("https://spdx.org/licenses/AGPL-3.0-or-later.html")
+			}
+		}
+		developers {
+			developer {
+				id.set(mod_authors)
+				name.set("Tobias Wohlfarth")
+				url.set("https://github.com/${mod_authors}/")
+			}
+		}
+		scm {
+			url.set("https://github.com/${mod_authors}/${mod_id}/")
+			connection.set("scm:git:git://github.com/${mod_authors}/${mod_id}.git")
+			developerConnection.set("scm:git:ssh://git@github.com/${mod_authors}/${mod_id}.git")
+		}
+	}
 }

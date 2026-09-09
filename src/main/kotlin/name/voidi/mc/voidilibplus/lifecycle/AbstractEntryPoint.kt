@@ -46,7 +46,9 @@ abstract class AbstractEntryPoint(
 			// This will use NeoForge's ConfigurationScreen to display this mod's configs
 			this.modContainer.registerExtensionPoint(
 				IConfigScreenFactory::class.java,
-				IConfigScreenFactory { container, screen -> ConfigurationScreen(container, screen)}
+				IConfigScreenFactory { container, screen ->
+					ConfigurationScreen(container, screen)
+				}
 			)
 		}
 	}
